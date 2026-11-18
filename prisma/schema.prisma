@@ -25,7 +25,7 @@ model User {
   sessions         Session[]
   accounts         Account[]
   conversations    Conversation[]
-  payments         Payment[]
+  transactions     Transaction[]
 
   @@map("user")
 }
@@ -97,29 +97,36 @@ model Message {
   @@map("message")
 }
 
-model Payment {
-  id            String        @id @default(uuid())
-  userId        String
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  transactionId String        @unique
-  amount        Float
-  status        PaymentStatus @default(PENDING)
-  planType      String
-  snapToken     String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-
-  @@map("payment")
-}
-
 enum SenderType {
   USER
   PARTNER
 }
 
-enum PaymentStatus {
+enum TransactionStatus {
   PENDING
   SUCCESS
   FAILED
   EXPIRED
+}
+
+enum TransactionType {
+  SUBSCRIPTION
+  DONATION
+}
+
+model Transaction {
+  id          String            @id @default(cuid())
+  orderId     String            @unique
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        TransactionType
+  amount      Int
+  status      TransactionStatus @default(PENDING)
+  snapToken   String?
+  redirectUrl String?
+  paymentType String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@map("transaction")
 }
