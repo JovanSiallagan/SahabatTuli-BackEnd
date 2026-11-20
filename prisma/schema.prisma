@@ -13,19 +13,23 @@ datasource db {
 }
 
 model User {
-  id               String         @id @default(uuid())
-  name             String
-  email            String         @unique
-  emailVerified    Boolean        @default(false)
-  image            String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  isPremium        Boolean        @default(false)
-  subscriptionEnds DateTime?
-  sessions         Session[]
-  accounts         Account[]
-  conversations    Conversation[]
-  transactions     Transaction[]
+  id                  String              @id @default(uuid())
+  name                String
+  email               String              @unique
+  emailVerified       Boolean             @default(false)
+  image               String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  isPremium           Boolean             @default(false)
+  subscriptionEnds    DateTime?
+  sessions            Session[]
+  accounts            Account[]
+  conversations       Conversation[]
+  transactions        Transaction[]
+  sentFriendships     Friendship[]        @relation("UserSentFriendships")
+  receivedFriendships Friendship[]        @relation("UserReceivedFriendships")
+  hostedRooms         CollaborationRoom[] @relation("RoomHost")
+  joinedRooms         RoomParticipant[]
 
   @@map("user")
 }
@@ -129,4 +133,57 @@ model Transaction {
   updatedAt   DateTime          @updatedAt
 
   @@map("transaction")
+}
+
+model Friendship {
+  id         String   @id @default(uuid())
+  senderId   String
+  receiverId String
+  createdAt  DateTime @default(now())
+
+  sender   User @relation("UserSentFriendships", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("UserReceivedFriendships", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+  @@map("friendship")
+}
+
+model CollaborationRoom {
+  id           String            @id @default(uuid())
+  title        String // Contoh: "Collaboration Room 1"
+  hostId       String
+  host         User              @relation("RoomHost", fields: [hostId], references: [id], onDelete: Cascade)
+  isActive     Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  endedAt      DateTime?
+  participants RoomParticipant[]
+  transcripts  RoomTranscript[]
+
+  @@map("collaboration_room")
+}
+
+model RoomParticipant {
+  id       String    @id @default(uuid())
+  roomId   String
+  userId   String
+  joinedAt DateTime  @default(now())
+  leftAt   DateTime? // Diisi saat user menekan tombol "Leave"
+
+  room CollaborationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, userId])
+  @@map("room_participant")
+}
+
+model RoomTranscript {
+  id        String   @id @default(uuid())
+  roomId    String
+  speakerId String
+  text      String
+  createdAt DateTime @default(now())
+
+  room CollaborationRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("room_transcript")
 }

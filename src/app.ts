@@ -6,6 +6,8 @@ import swaggerUi from 'swagger-ui-express';
 import { toNodeHandler } from "better-auth/node";
 import { swaggerSpec } from "./swagger";
 import conversationRoutes from './modules/conversation/conversation.routes';
+import friendRoutes from './modules/friend/friend.routes';
+import collaborationRoutes from './modules/collaboration/collaboration.routes';
 import { auth } from "./lib/auth";
 
 const app = express();
@@ -16,5 +18,7 @@ app.use(express.json());
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/conversations', conversationRoutes);
+app.use('/api/friends', friendRoutes);
+app.use('/api/collaborations', collaborationRoutes);
 
 export default app;
