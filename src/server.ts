@@ -1,7 +1,12 @@
+import http from "http";
 import app from "./app";
+import { initSocket } from "./lib/socket";
 
-const port = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+const httpServer = http.createServer(app);
+initSocket(httpServer);
+
+httpServer.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
