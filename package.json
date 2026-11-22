@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "build": "npx prisma generate --config prisma7.config.ts",
+    "start": "tsx src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "swagger": "tsx watch src/swagger.ts"
   },
