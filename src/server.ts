@@ -2,11 +2,11 @@ import http from "http";
 import app from "./app";
 import { initSocket } from "./lib/socket";
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 const httpServer = http.createServer(app);
 initSocket(httpServer);
 
-httpServer.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+httpServer.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
 });

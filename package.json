@@ -2,10 +2,14 @@
   "name": "sahabattuli",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.ts",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "npx prisma generate --config prisma7.config.ts",
+    "postinstall": "prisma generate --config prisma7.config.ts",
+    "build": "prisma generate --config prisma7.config.ts",
     "start": "tsx src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "swagger": "tsx watch src/swagger.ts"
@@ -22,9 +26,11 @@
     "express": "^5.3.0",
     "midtrans-client": "^1.4.3",
     "pg": "^8.23.1",
+    "prisma": "^7.10.1",
     "socket.io": "^4.8.4",
     "swagger-jsdoc": "^6.3.0",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
@@ -33,8 +39,6 @@
     "@types/pg": "^8.23.1",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "prisma": "^7.10.1",
-    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   }
 }
