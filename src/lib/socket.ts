@@ -6,10 +6,13 @@ import { collaborationService } from "../modules/collaboration/collaboration.ser
 
 export const initSocket = (httpServer: HttpServer) => {
     const io = new Server(httpServer, {
-        cors: {
-            origin: process.env.CLIENT_URL || "*",
-            credentials: true,
-        },
+    cors: {
+        origin: [
+        "https://api.sahabattuli.com",
+        /^http:\/\/localhost:\d+$/,
+        ],
+        credentials: true,
+    },
     });
 
     // Middleware autentikasi Better Auth untuk koneksi WebSocket

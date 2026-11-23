@@ -11,10 +11,21 @@ import collaborationRoutes from './modules/collaboration/collaboration.routes';
 import transactionRoutes from './modules/transaction/transaction.routes';
 import { auth } from "./lib/auth";
 import prisma from "./config/prisma";
+import cors from "cors";
 
 const app = express();
 
 app.set('trust proxy', 1);
+
+app.use(
+  cors({    
+    origin: [
+      "https://api.sahabattuli.com",
+      /^http:\/\/localhost:\d+$/,
+    ],
+    credentials: true,
+  })
+);
 
 app.all('/api/auth/*splat', toNodeHandler(auth));
 

@@ -5,9 +5,15 @@ import prisma from '../config/prisma';
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL, 
     trustedOrigins: [
-        'https://api.sahabattuli.com',
-        'sahabattuli://', 
+        "https://api.sahabattuli.com",
+        "http://localhost:*",
     ],
+    advanced: {
+        defaultCookieAttributes: {
+        sameSite: "none",
+        secure: true,
+        },
+    },
     database: prismaAdapter(prisma, {
         provider: 'postgresql',
     }),
